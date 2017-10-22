@@ -22,7 +22,7 @@ Install from PyPI with pip::
 Usage
 -----
 
-Use envy to read and cast environment variables in your django settings:
+Use django-envy to read and cast environment variables in your django settings:
 
 .. code-block:: python
 
@@ -43,7 +43,7 @@ Django-envy is licensed under the MIT license. See `LICENSE.txt`_
 Release History
 ---------------
 
-See `changelog`_
+See `CHANGELOG.rst`_
 
 
 
@@ -68,3 +68,5 @@ See `changelog`_
     :alt: Package license
 
 .. _LICENSE.txt: https://github.com/miped/django-envy/blob/master/LICENSE.txt
+
+.. _CHANGELOG.rst: https://github.com/miped/django-envy/blob/master/CHANGELOG.rst
