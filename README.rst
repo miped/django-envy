@@ -1,7 +1,7 @@
 django-envy
 ===========
 
-An opinionated environment variable parser, which can be used with Django or standalone.
+An opinionated environment variable parser, which focuses on strictness, and doing one thing well. Can be used standalone or with Django.
 
 |build| |coverage| |license|
 
@@ -34,6 +34,18 @@ Use envy to read and cast environment variables in your django settings:
     SECRET_KEY = env('SECRET_KEY')  # Will raise ImproperlyConfigured if SECRET_KEY is not in os.environ
 
 
+License
+-------
+
+Django-envy is licensed under the MIT license. See `LICENSE.txt`_
+
+
+Release History
+---------------
+
+See `changelog`_
+
+
 
 .. |pypi| image:: https://img.shields.io/pypi/v/django-envy.svg
     :target: https://pypi.python.org/pypi/django-envy
@@ -55,4 +67,4 @@ Use envy to read and cast environment variables in your django settings:
     :target: https://raw.githubusercontent.com/miped/django-envy/master/LICENSE.txt
     :alt: Package license
 
-.. _LICENSE_FILE: https://github.com/miped/django-envy/blob/master/LICENSE.txt
+.. _LICENSE.txt: https://github.com/miped/django-envy/blob/master/LICENSE.txt
