@@ -5,6 +5,13 @@ An opinionated environment variable parser, which focuses on strictness, and doi
 
 |build| |coverage| |license|
 
+
+Why another environment parser?
+-------------------------------
+
+Coming Soon
+
+
 Documentation
 -------------
 
