@@ -46,6 +46,24 @@ Release History
 See `CHANGELOG.rst`_
 
 
+Acknowledgments
+---------------
+
+Django-envy takes inspiration from multiple sources and packages:
+
+- `12factor`_
+- `12factor-django`_
+- `Two Scoops of Django`_
+- `rconradharris`_ / `envparse`_
+- `joke2k`_ / `django-environ`_
+
+.. _rconradharris: https://github.com/rconradharris
+.. _envparse: https://github.com/rconradharris/envparse
+.. _joke2k: https://github.com/joke2k
+.. _django-environ: https://github.com/joke2k/django-environ
+.. _12factor: http://www.12factor.net/
+.. _12factor-django: http://www.wellfireinteractive.com/blog/easier-12-factor-django/
+.. _`Two Scoops of Django`: http://twoscoopspress.org/
 
 .. |pypi| image:: https://img.shields.io/pypi/v/django-envy.svg
     :target: https://pypi.python.org/pypi/django-envy
