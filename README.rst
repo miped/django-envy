@@ -5,8 +5,39 @@ An opinionated environment variable parser, which can be used with Django or sta
 
 |build| |coverage| |license|
 
+Documentation
+-------------
+
+Coming Soon
 
 
+Installation
+------------
+
+Install from PyPI with pip::
+
+    $ pip install django-envy
+
+
+Usage
+-----
+
+Use envy to read and cast environment variables in your django settings:
+
+.. code-block:: python
+
+    from envy import env
+
+    DEBUG = env.bool('DEBUG', default=False)  # True if os.environ['DEBUG'] == 'true', defaults to False
+    TEMPLATE_DEBUG = DEBUG
+
+    SECRET_KEY = env('SECRET_KEY')  # Will raise ImproperlyConfigured if SECRET_KEY is not in os.environ
+
+
+
+.. |pypi| image:: https://img.shields.io/pypi/v/django-envy.svg
+    :target: https://pypi.python.org/pypi/django-envy
+    :alt: Latest version released on PyPi
 
 .. |build| image:: https://img.shields.io/travis/miped/django-envy/master.svg
     :target: https://travis-ci.org/miped/django-envy
