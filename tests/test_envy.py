@@ -51,9 +51,17 @@ class TestEnvironment(TestCase):
 
     # Casting
 
-    def test_default_value_casted(self):
+    def test_default_value_casted_by_default(self):
         e = Environment({})
         self.assertEqual(e('x', cast=int, default="1"), 1)
+
+    def test_default_value_not_forced(self):
+        e = Environment({})
+        self.assertEqual(e('x', cast=int, default="1", force=False), "1")
+
+    def test_default_value_none(self):
+        e = Environment({})
+        self.assertEqual(e('x', cast=int, default=None), None)
 
 
 class CastingTestCase(TestCase):
@@ -130,8 +138,18 @@ class TestBoolCasting(CastingTestCase):
 
 class TestIntCasting(CastingTestCase):
 
-    def test_int_returns_int(self):
+    def test_int_from_string(self):
         e = Environment({'x': '1'})
+        self.assertEqualAndType(e('x', cast=int), 1)
+        self.assertEqualAndType(e.int('x'), 1)
+
+    def test_int_from_int(self):
+        e = Environment({'x': 1})
+        self.assertEqualAndType(e('x', cast=int), 1)
+        self.assertEqualAndType(e.int('x'), 1)
+
+    def test_int_from_float(self):
+        e = Environment({'x': 1.0})
         self.assertEqualAndType(e('x', cast=int), 1)
         self.assertEqualAndType(e.int('x'), 1)
 
@@ -139,6 +157,11 @@ class TestIntCasting(CastingTestCase):
         e = Environment({})
         self.assertEqualAndType(e('x', cast=int, default='1'), 1)
         self.assertEqualAndType(e.int('x', default='1'), 1)
+
+    def test_int_underscore_separator(self):
+        e = Environment({'x': '1_000_000'})
+        self.assertEqualAndType(e('x', cast=int), 1000000)
+        self.assertEqualAndType(e.int('x'), 1000000)
 
     def test_int_error_raises(self):
         e = Environment({'x': 'y'})
@@ -166,8 +189,18 @@ class TestIntCasting(CastingTestCase):
 
 class TestFloatCasting(CastingTestCase):
 
-    def test_float_returns_float(self):
-        e = Environment({'x': '1'})
+    def test_float_from_string(self):
+        e = Environment({'x': '1.0'})
+        self.assertEqualAndType(e('x', cast=float), 1.0)
+        self.assertEqualAndType(e.float('x'), 1.0)
+
+    def test_float_from_float(self):
+        e = Environment({'x': 1.0})
+        self.assertEqualAndType(e('x', cast=float), 1.0)
+        self.assertEqualAndType(e.float('x'), 1.0)
+
+    def test_float_from_int(self):
+        e = Environment({'x': 1})
         self.assertEqualAndType(e('x', cast=float), 1.0)
         self.assertEqualAndType(e.float('x'), 1.0)
 
@@ -175,6 +208,11 @@ class TestFloatCasting(CastingTestCase):
         e = Environment({})
         self.assertEqualAndType(e('x', cast=float, default='1.1'), 1.1)
         self.assertEqualAndType(e.float('x', default='1.1'), 1.1)
+
+    def test_float_underscore_separator(self):
+        e = Environment({'x': '1_000_000.0'})
+        self.assertEqualAndType(e('x', cast=float), 1000000.0)
+        self.assertEqualAndType(e.float('x'), 1000000.0)
 
     def test_float_error_raises(self):
         e = Environment({'x': 'y'})
@@ -330,12 +368,34 @@ class TestListCasting(CastingTestCase):
         with self.assertRaises(ImproperlyConfigured):
             e.list('x')
 
+    def test_list_type_error_message(self):
+        e = Environment({'XXX': 1})
+        try:
+            e('XXX', cast=list)
+        except ImproperlyConfigured as exc:
+            self.assertIn('XXX', str(exc), "message should contain var")
+            self.assertIn('int', str(exc), "message should contain type")
+
+        try:
+            e.list('XXX')
+        except ImproperlyConfigured as exc:
+            self.assertIn('XXX', str(exc), "message should contain var")
+            self.assertIn('int', str(exc), "message should contain type")
+
     def test_list_incorrect_cast_raises(self):
         e = Environment({'x': 1})
         with self.assertRaises(ImproperlyConfigured):
             e('x', cast=[int, int])
         with self.assertRaises(ImproperlyConfigured):
             e('x', cast=[])
+
+    def test_list_incorrect_cast_error_message(self):
+        e = Environment({'XXX': 1})
+        try:
+            e('XXX', cast=[int, float])
+        except ImproperlyConfigured as exc:
+            self.assertIn('XXX', str(exc), "message should contain var")
+            self.assertIn('list', str(exc), "message should contain type")
 
     def test_list_item_casts(self):
         e = Environment({'x': '1, 2, 3'})
@@ -349,19 +409,19 @@ class TestListCasting(CastingTestCase):
         with self.assertRaises(ImproperlyConfigured):
             e.list('x', cast=list)
 
-    def test_list_error_message(self):
-        e = Environment({'XXX': 1})
+    def test_list_nested_error_message(self):
+        e = Environment({'XXX': '1, 2, 3'})
         try:
-            e('XXX', cast=list)
+            e('XXX', cast=[list])
         except ImproperlyConfigured as exc:
             self.assertIn('XXX', str(exc), "message should contain var")
-            self.assertIn('int', str(exc), "message should contain type")
+            self.assertIn('nested', str(exc), "message should contain nested")
 
         try:
-            e.list('XXX')
+            e.list('XXX', cast=list)
         except ImproperlyConfigured as exc:
             self.assertIn('XXX', str(exc), "message should contain var")
-            self.assertIn('int', str(exc), "message should contain type")
+            self.assertIn('nested', str(exc), "message should contain nested")
 
 
 class TestSetCasting(CastingTestCase):
@@ -443,7 +503,7 @@ class TestSetCasting(CastingTestCase):
             self.assertIn('nested', str(exc), "message should contain nested")
 
         try:
-            e.dict('XXX', cast=list)
+            e.set('XXX', cast=list)
         except ImproperlyConfigured as exc:
             self.assertIn('XXX', str(exc), "message should contain var")
             self.assertIn('nested', str(exc), "message should contain nested")

@@ -44,54 +44,55 @@ class Environment(object):
     def __init__(self, environ=None):
         self.environ = environ if environ else os.environ
 
-    def __call__(self, var, default=NOTSET, cast=None):
-        return self._get(var, default=default, cast=cast)
+    def __call__(self, var, default=NOTSET, cast=None, force=True):
+        return self._get(var, default=default, cast=cast, force=force)
 
     def __contains__(self, var):
         return var in self.environ
 
     # Simple builtins
 
-    def bool(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=bool)
+    def bool(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=bool, force=force)
 
-    def float(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=float)
+    def float(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=float, force=force)
 
-    def int(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=int)
+    def int(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=int, force=force)
 
-    def str(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=text_type)
+    def str(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=text_type, force=force)
 
     # Builtin collections
 
-    def tuple(self, var, default=NOTSET, cast=None):
-        return self._get(var, default=default, cast=(cast,))
+    def tuple(self, var, default=NOTSET, cast=None, force=True):
+        return self._get(var, default=default, cast=(cast,), force=force)
 
-    def list(self, var, default=NOTSET, cast=None):
-        return self._get(var, default=default, cast=[cast])
+    def list(self, var, default=NOTSET, cast=None, force=True):
+        return self._get(var, default=default, cast=[cast], force=force)
 
-    def set(self, var, default=NOTSET, cast=None):
-        return self._get(var, default=default, cast={cast})
+    def set(self, var, default=NOTSET, cast=None, force=True):
+        return self._get(var, default=default, cast={cast}, force=force)
 
-    def dict(self, var, default=NOTSET, cast=None):
-        return self._get(var, default=default, cast={str: cast})
+    def dict(self, var, default=NOTSET, cast=None, force=True):
+        return self._get(var, default=default, cast={str: cast}, force=force)
 
     # Other types
 
-    def decimal(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=Decimal)
+    def decimal(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=Decimal, force=force)
 
-    def json(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=json.loads)
+    def json(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=json.loads, force=force)
 
-    def url(self, var, default=NOTSET):
-        return self._get(var, default=default, cast=urlparse.urlparse)
+    def url(self, var, default=NOTSET, force=True):
+        return self._get(var, default=default, cast=urlparse.urlparse,
+                         force=force)
 
     # Private API
 
-    def _get(self, var, default=NOTSET, cast=None):
+    def _get(self, var, default=NOTSET, cast=None, force=True):
         # Find the value in the environ
         # If the value is missing, use the default or raise an error
         try:
@@ -103,8 +104,11 @@ class Environment(object):
             else:
                 value = default
 
-        # We always cast, even if we've got the default value
-        value = self._cast(var, value, cast)
+        # Cast value if:
+        #  1. it is different than the default
+        #  2. we force, and default different from None
+        if (value != default) or (force and default is not None):
+            value = self._cast(var, value, cast)
 
         return value
 
@@ -124,6 +128,9 @@ class Environment(object):
                     raise ImproperlyConfigured(msg.format(var, value))
 
         elif cast is int:
+            # Allow _ as separators to increase legibility
+            if isinstance(value, string_types):
+                value = value.replace('_', '')
             try:
                 value = int(value)
             except ValueError as e:
@@ -132,6 +139,9 @@ class Environment(object):
                 raise ImproperlyConfigured(msg.format(var, str(e)))
 
         elif cast is float:
+            # Allow _ as separators to increase legibility
+            if isinstance(value, string_types):
+                value = value.replace('_', '')
             try:
                 value = float(value)
             except ValueError as e:
