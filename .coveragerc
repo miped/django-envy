@@ -1,0 +1,7 @@
+[run]
+branch = true
+
+[report]
+include =
+    envy.py
+show_missing = true

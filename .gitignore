@@ -1,0 +1,9 @@
+.cache/
+.coverage
+.eggs/
+.python-version
+.tox/
+__pycache__/
+django_envy.egg-info/
+*.pyc
+htmlcov/
