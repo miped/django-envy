@@ -7,3 +7,4 @@ __pycache__/
 django_envy.egg-info/
 *.pyc
 htmlcov/
+docs/_build

@@ -37,56 +37,141 @@ logger = logging.getLogger(__name__)
 
 
 class Environment(object):
+    """Class for reading and casting environment variables
+
+    This class presents the main interface for interacting with the
+    environment. Once instantiated, it can either be called as a function,
+    or any of the convenience methods can be used.
+
+    Args:
+        environ (dict): Environment to read variables from
+    """
 
     _collections = (dict, list, set, tuple)
     _lists = (list, set, tuple)
 
-    def __init__(self, environ=None):
-        self.environ = environ if environ else os.environ
+    def __init__(self, environ):
+        self.environ = environ
 
     def __call__(self, var, default=NOTSET, cast=None, force=True):
+        """Function interface
+
+        Once the environment has been initialised, it can be called as a
+        function. This is necessary to provide custom casting, or it can
+        sometimes be preferred for consistency.
+
+        Examples:
+            Casting an environment variable:
+
+            >>> env = Environment({'MY_VAR': '1'})
+            >>> env('MY_VAR', cast=int)
+            1
+
+            Providing a default:
+
+            >>> env = Environment({})
+            >>> env('ANOTHER_VAR', default='value')
+            "value"
+
+        Args:
+            var (str): The name of the environment variable
+            default: The value to return if the environment variable does not
+                exist
+            cast: type or function for casting environment variable. See
+                casting
+            force (bool): Whether to force casting of the default value
+
+        Returns:
+            The environment variable if it exists, otherwise default
+
+        Raises:
+            ImproperlyConfigured
+        """
         return self._get(var, default=default, cast=cast, force=force)
 
     def __contains__(self, var):
+        """Test if an environment variable exists
+
+        Allows using the ``in`` operator to test if an environment variable
+        exists.
+
+        Examples:
+            >>> env = Environment({'MY_VAR': '1'})
+            >>> 'MY_VAR' in env
+            True
+            >>> 'ANOTHER_VAR' in env
+            False
+        """
         return var in self.environ
 
     # Simple builtins
 
     def bool(self, var, default=NOTSET, force=True):
+        """Get environment variable, casted to a bool"""
         return self._get(var, default=default, cast=bool, force=force)
 
     def float(self, var, default=NOTSET, force=True):
+        """Get environment variable, casted to a float"""
         return self._get(var, default=default, cast=float, force=force)
 
     def int(self, var, default=NOTSET, force=True):
+        """Get environment variable, casted to an int"""
         return self._get(var, default=default, cast=int, force=force)
 
     def str(self, var, default=NOTSET, force=True):
+        """Get environment variable, casted to a str"""
         return self._get(var, default=default, cast=text_type, force=force)
 
     # Builtin collections
 
     def tuple(self, var, default=NOTSET, cast=None, force=True):
+        """Get environment variable, casted to a tuple
+
+        Note:
+            Casting
+        """
         return self._get(var, default=default, cast=(cast,), force=force)
 
     def list(self, var, default=NOTSET, cast=None, force=True):
+        """Get environment variable, casted to a list
+
+        Note:
+            Casting
+        """
         return self._get(var, default=default, cast=[cast], force=force)
 
     def set(self, var, default=NOTSET, cast=None, force=True):
+        """Get environment variable, casted to a set
+
+        Note:
+            Casting
+        """
         return self._get(var, default=default, cast={cast}, force=force)
 
     def dict(self, var, default=NOTSET, cast=None, force=True):
+        """Get environment variable, casted to a dict
+
+        Note:
+            Casting
+        """
         return self._get(var, default=default, cast={str: cast}, force=force)
 
     # Other types
 
     def decimal(self, var, default=NOTSET, force=True):
+        """Get environment variable, casted to a decimal.Decimal
+
+        Note:
+            Casting
+        """
         return self._get(var, default=default, cast=Decimal, force=force)
 
     def json(self, var, default=NOTSET, force=True):
+        """Get environment variable, parsed as a json string"""
         return self._get(var, default=default, cast=json.loads, force=force)
 
     def url(self, var, default=NOTSET, force=True):
+        """Get environment variable, parsed with urlparse/urllib.parse"""
         return self._get(var, default=default, cast=urlparse.urlparse,
                          force=force)
 
@@ -228,4 +313,4 @@ class Environment(object):
 
 # Export an initialized environment for convenience
 
-env = Environment()
+env = Environment(os.environ)

@@ -64,6 +64,8 @@ Django-envy takes inspiration from multiple sources and packages:
 - `rconradharris`_ / `envparse`_
 - `joke2k`_ / `django-environ`_
 
+
+
 .. _rconradharris: https://github.com/rconradharris
 .. _envparse: https://github.com/rconradharris/envparse
 .. _joke2k: https://github.com/joke2k
@@ -80,7 +82,7 @@ Django-envy takes inspiration from multiple sources and packages:
     :target: https://travis-ci.org/miped/django-envy
     :alt: Build status of the master branch
 
-.. |docs| image:: https://img.shields.io/readthedocs/django-envy/stable.svg
+.. |docs| image:: https://img.shields.io/readthedocs/django-envy/latest.svg
     :target: https://django-envy.rtfd.io
     :alt: Build status of documentation
 
