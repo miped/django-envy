@@ -14,6 +14,11 @@ try:
     from django.core.exceptions import ImproperlyConfigured
 except ImportError:
     class ImproperlyConfigured(Exception):
+        """Configuration Exception
+
+        Imported from Django if available, otherwise defined as
+        a simple subclass of Exception
+        """
         pass
 
 try:
@@ -44,7 +49,7 @@ class Environment(object):
     or any of the convenience methods can be used.
 
     Args:
-        environ (dict): Environment to read variables from
+        environ (`dict`): Environment to read variables from
     """
 
     _collections = (dict, list, set, tuple)
@@ -74,12 +79,12 @@ class Environment(object):
             "value"
 
         Args:
-            var (str): The name of the environment variable
+            var (`str`): The name of the environment variable
             default: The value to return if the environment variable does not
                 exist
             cast: type or function for casting environment variable. See
                 casting
-            force (bool): Whether to force casting of the default value
+            force (`bool`): Whether to force casting of the default value
 
         Returns:
             The environment variable if it exists, otherwise default
@@ -107,25 +112,25 @@ class Environment(object):
     # Simple builtins
 
     def bool(self, var, default=NOTSET, force=True):
-        """Get environment variable, casted to a bool"""
+        """Convenience method for casting to a bool"""
         return self._get(var, default=default, cast=bool, force=force)
 
     def float(self, var, default=NOTSET, force=True):
-        """Get environment variable, casted to a float"""
+        """Convenience method for casting to a float"""
         return self._get(var, default=default, cast=float, force=force)
 
     def int(self, var, default=NOTSET, force=True):
-        """Get environment variable, casted to an int"""
+        """Convenience method for casting to an int"""
         return self._get(var, default=default, cast=int, force=force)
 
     def str(self, var, default=NOTSET, force=True):
-        """Get environment variable, casted to a str"""
+        """Convenience method for casting to a str"""
         return self._get(var, default=default, cast=text_type, force=force)
 
     # Builtin collections
 
     def tuple(self, var, default=NOTSET, cast=None, force=True):
-        """Get environment variable, casted to a tuple
+        """Convenience method for casting to a tuple
 
         Note:
             Casting
@@ -133,7 +138,7 @@ class Environment(object):
         return self._get(var, default=default, cast=(cast,), force=force)
 
     def list(self, var, default=NOTSET, cast=None, force=True):
-        """Get environment variable, casted to a list
+        """Convenience method for casting to a list
 
         Note:
             Casting
@@ -141,7 +146,7 @@ class Environment(object):
         return self._get(var, default=default, cast=[cast], force=force)
 
     def set(self, var, default=NOTSET, cast=None, force=True):
-        """Get environment variable, casted to a set
+        """Convenience method for casting to a set
 
         Note:
             Casting
@@ -149,7 +154,7 @@ class Environment(object):
         return self._get(var, default=default, cast={cast}, force=force)
 
     def dict(self, var, default=NOTSET, cast=None, force=True):
-        """Get environment variable, casted to a dict
+        """Convenience method for casting to a dict
 
         Note:
             Casting
@@ -159,7 +164,7 @@ class Environment(object):
     # Other types
 
     def decimal(self, var, default=NOTSET, force=True):
-        """Get environment variable, casted to a decimal.Decimal
+        """Convenience method for casting to a decimal.Decimal
 
         Note:
             Casting

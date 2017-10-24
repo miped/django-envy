@@ -3,4 +3,10 @@ API
 
 .. autoclass:: envy.Environment
   :members:
-  :special-members: __call__, __contains__
+  :special-members: __init__, __call__, __contains__
+
+
+Exceptions
+----------
+
+.. autoclass:: envy.ImproperlyConfigured
