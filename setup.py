@@ -6,7 +6,7 @@ import envy
 
 
 with open('README.rst') as readme:
-    long_description = readme.read.strip()
+    long_description = readme.read().strip()
 
 
 class PyTest(TestCommand):
