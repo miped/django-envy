@@ -5,6 +5,10 @@ from setuptools.command.test import test as TestCommand  # noqa
 import envy
 
 
+with open('README.rst') as readme:
+    long_description = readme.read.strip()
+
+
 class PyTest(TestCommand):
     user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
 
@@ -22,8 +26,8 @@ class PyTest(TestCommand):
 setup(
     name="django-envy",
     version=envy.__version__,
-    description=".",
-    long_description="...",
+    description="Opinionated environment variable parser for Django",
+    long_description=long_description,
     keywords="django, environment, env, settings, configuration",
     author="Michael Pedersen <mp@miped.dk>",
     author_email="mp@miped.dk",
