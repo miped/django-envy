@@ -18,9 +18,9 @@ class TestEnvironment(TestCase):
 
     # Init
 
-    def test_init_no_environ(self):
-        e = Environment()
-        self.assertIs(os.environ, e.environ)
+    def test_init_requires_environ(self):
+        with self.assertRaises(TypeError):
+            Environment()
 
     def test_init_custom_environ(self):
         environ = {'test': True}
