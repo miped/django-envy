@@ -3,7 +3,7 @@ django-envy
 
 An opinionated environment variable parser, which focuses on strictness, and doing one thing well. Can be used standalone or with Django.
 
-|build| |coverage| |license|
+|build| |coverage| |license| |pypi| |docs|
 
 
 Why another environment parser?
@@ -44,7 +44,7 @@ Use django-envy to read and cast environment variables in your django settings:
 License
 -------
 
-Django-envy is licensed under the MIT license. See `LICENSE.txt`_
+Django-envy is licensed under the MIT license. See `LICENSE`_
 
 
 Release History
@@ -91,9 +91,9 @@ Django-envy takes inspiration from multiple sources and packages:
     :alt: Code coverage of the master branch
 
 .. |license| image:: https://img.shields.io/github/license/miped/django-envy.svg
-    :target: https://raw.githubusercontent.com/miped/django-envy/master/LICENSE.txt
+    :target: https://raw.githubusercontent.com/miped/django-envy/master/LICENSE
     :alt: Package license
 
-.. _LICENSE.txt: https://github.com/miped/django-envy/blob/master/LICENSE.txt
+.. _LICENSE: https://github.com/miped/django-envy/blob/master/LICENSE
 
 .. _CHANGELOG.rst: https://github.com/miped/django-envy/blob/master/CHANGELOG.rst

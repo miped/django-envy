@@ -32,7 +32,7 @@ except ImportError:
         text_type = unicode
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 
 NOTSET = type(str('NoValue'), (object,), {})
